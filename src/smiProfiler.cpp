@@ -17,6 +17,13 @@
 
 #define MAX_BUFFER_SIZE_MB 1024
 
+namespace global{
+
+  bool collect_data;
+  pthread_mutex_t mutex;
+
+}
+
 uint64_t max_timestamps, profiler_step;
 uint64_t profiler_index;  // index for each run of rocSTAR
 int metrics_per_timestamp;
@@ -171,7 +178,7 @@ void* thread_entry(void* arg){
 
 
 // Start collecting HW telemetry data
-void rocStarStart(char *label){
+void smiProfilerStart(char *label){
 	hipEventCreate(&stop);
 
 	region_label = label;
@@ -182,7 +189,7 @@ void rocStarStart(char *label){
 }
 
 // Stop collecting HW telemetry data
-void rocStarStop()
+void smiProfilerStop()
 {
 	hipEventRecord(stop,0);
 	hipEventSynchronize(stop);
